@@ -1,12 +1,9 @@
-﻿using DDDBasic.Application.Base;
-using DDDBasic.Domain.Exceptions;
+﻿using DDDBasic.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace DDDBasic.Web.Filters
 {
@@ -21,7 +18,7 @@ namespace DDDBasic.Web.Filters
                 IDictionary<string, string[]> failures = validationException.Failures;
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Result = new JsonResult(new ResultApi<IDictionary<string, string[]>>(failures["ExcecaoCapex"]));
+                context.Result = new JsonResult(failures["ExcecaoCapex"]);
                 return;
             }
 
@@ -33,14 +30,9 @@ namespace DDDBasic.Web.Filters
 
             }
 
-            //if (context.Exception is NotAuthorizedException)
-            //{
-            //    code = HttpStatusCode.Unauthorized;
-            //}
-
             context.HttpContext.Response.ContentType = "application/json";
             context.HttpContext.Response.StatusCode = (int)code;
-            context.Result = new JsonResult(new ResultApi<string[]>(new[] { context.Exception.Message }, context.Exception.Message));
+            context.Result = new JsonResult(new[] { context.Exception.Message }, context.Exception.Message);
         }
     }
 }

@@ -8,17 +8,14 @@ using DDDBasic.Persistence;
 using DDDBasic.Persistence.Data;
 using DDDBasic.Persistence.Repositories;
 using DDDBasic.Web.Filters;
-using DDDBasic.Web.Mapping;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AutoMapper;
 
 namespace DDDBasic.Web
 {
