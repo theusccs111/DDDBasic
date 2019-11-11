@@ -1,4 +1,5 @@
-﻿using DDDBasic.Domain.Entities;
+﻿using DDDBasic.Application.Resource.Request;
+using DDDBasic.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,5 +10,6 @@ namespace DDDBasic.Application.Interfaces.Repository
     public interface IProductRepository : IRepository<Product>
     {
         Task<IEnumerable<Product>> GetByName(string name);
+        Task<IEnumerable<Product>> GetProductsByAnyFilter(ProductGetRequest request);
     }
 }
