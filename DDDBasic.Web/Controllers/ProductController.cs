@@ -3,6 +3,7 @@ using DDDBasic.Application.Resource.Response;
 using DDDBasic.Application.Service;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DDDBasic.Web.Controllers
 {
@@ -17,69 +18,69 @@ namespace DDDBasic.Web.Controllers
         }
 
         [HttpGet("Get")]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var resultado = _productService.Get();
+            var resultado = await _productService.Get();
             return Ok(resultado);
         }
 
         [HttpPost("GetByAnyFilter")]
-        public IActionResult GetByAnyFilter(ProductGetRequest request)
+        public async Task<IActionResult> GetByAnyFilter(ProductGetRequest request)
         {
-            var resultado = _productService.GetByAnyFilter(request);
+            var resultado = await _productService.GetByAnyFilter(request);
             return Ok(resultado);
         }
 
         [HttpGet("GetById/{Id}")]
-        public IActionResult GetById(int Id)
+        public async Task<IActionResult> GetById(int Id)
         {
-            var resultado = _productService.GetById(Id);
+            var resultado = await _productService.GetById(Id);
             return Ok(resultado);
         }
 
         [HttpPost("Post")]
-        public IActionResult Post(ProductResource request)
+        public async Task<IActionResult> Post(ProductResource request)
         {
-            var resultado = _productService.Add(request.ResourceToEntity());
-            return Ok(resultado);
+            await _productService.Add(request.ResourceToEntity());
+            return Ok();
         }
 
         [HttpPost("PostMany")]
-        public IActionResult PostMany(ProductResource[] request)
+        public async Task<IActionResult> PostMany(ProductResource[] request)
         {
             var productsToSave = request.Select(product => product.ResourceToEntity()).ToArray();
-            var resultado = _productService.AddMany(productsToSave);
-            return Ok(resultado);
+            await _productService.AddMany(productsToSave);
+            return Ok();
         }
 
         [HttpPut("Put")]
-        public IActionResult Put(ProductResource request)
+        public async Task<IActionResult> Put(ProductResource request)
         {
-            var resultado = _productService.Update(request.ResourceToEntity());
-            return Ok(resultado);
+            await _productService.Update(request.ResourceToEntity());
+            return Ok();
         }
 
         [HttpPut("PutMany")]
-        public IActionResult PutMany(ProductResource[] request)
+        public async Task<IActionResult> PutMany(ProductResource[] request)
         {
             var productsToSave = request.Select(product => product.ResourceToEntity()).ToArray();
-            var resultado = _productService.UpdateMany(productsToSave);
-            return Ok(resultado);
+            await _productService.UpdateMany(productsToSave);
+            return Ok();
         }
 
         [HttpDelete("Delete")]
-        public IActionResult Delete(ProductResource request)
+        public async Task<IActionResult> Delete(ProductResource request)
         {
-            var resultado = _productService.Delete(request.ResourceToEntity());
-            return Ok(resultado);
+            await _productService.Delete(request.ResourceToEntity());
+            return Ok();
         }
 
         [HttpDelete("DeleteMany")]
-        public IActionResult DeleteMany(ProductResource[] request)
+        public async Task<IActionResult> DeleteMany(ProductResource[] request)
         {
             var productsToDelete = request.Select(product => product.ResourceToEntity()).ToArray();
-            var resultado = _productService.DeleteMany(productsToDelete);
-            return Ok(resultado);
+            await _productService.DeleteMany(productsToDelete);
+            return Ok();
         }
     }
 }

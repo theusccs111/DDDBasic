@@ -8,10 +8,12 @@ using DDDBasic.Persistence;
 using DDDBasic.Persistence.Data;
 using DDDBasic.Persistence.Repositories;
 using DDDBasic.Web.Filters;
+using DDDBasic.Web.Middleware;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,16 +33,27 @@ namespace DDDBasic.Web
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DDDBasicContext>(options => options.UseSqlServer(connectionString));
 
-            InjectFluentValidation(services);
+            //services.AddTransient<GlobalExceptionHandlerMiddleware>();
+
+            services
+               .AddMvc(options =>
+               {
+                   //options.Filters.Add(new RequestValidationFilter());
+                   options.Filters.Add(new CustomExceptionFilterAttribute());
+                   options.EnableEndpointRouting = false;
+               })
+               .AddFluentValidation(options =>
+               {
+                   options.RegisterValidatorsFromAssemblyContaining<ProductValidator>();
+               })
+               ;
+            //InjectFluentValidation(services);
             InjectServices(services);
             InjectRepositories(services);
 
-            services
-               .AddMvc(options => {
-                   options.Filters.Add(typeof(CustomExceptionFilterAttribute));
-                   options.EnableEndpointRouting = false;
-               })
-               .AddFluentValidation();
+            services.AddScoped<RequestValidationFilter>();
+
+            
         }
 
         private static void InjectServices(IServiceCollection services)
@@ -61,10 +74,10 @@ namespace DDDBasic.Web
         }
 
 
-        private static void InjectFluentValidation(IServiceCollection services)
-        {
-            services.AddTransient<IValidator<Product>, ProductValidator>();
-        }
+        //private static void InjectFluentValidation(IServiceCollection services)
+        //{
+        //    services.AddSingleton<ProductValidator>();
+        //}
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -79,6 +92,8 @@ namespace DDDBasic.Web
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
+
+            app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
         }
     }
 }

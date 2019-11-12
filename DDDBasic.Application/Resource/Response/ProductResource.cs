@@ -14,7 +14,7 @@ namespace DDDBasic.Application.Resource.Response
         public decimal Value { get; set; }
         public TypeProduct TypeProduct { get; set; }
         public string TypeProductDescription { get; set; }
-        public int SectionId { get; set; }
+        public int? SectionId { get; set; }
     }
 
     public static class ProductExtensions

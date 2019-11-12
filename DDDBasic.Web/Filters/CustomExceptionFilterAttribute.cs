@@ -1,13 +1,15 @@
 ﻿using DDDBasic.Domain.Exceptions;
+using DDDBasic.Domain.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 
 namespace DDDBasic.Web.Filters
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.All)]
     public class CustomExceptionFilterAttribute : ExceptionFilterAttribute
     {
         public override void OnException(ExceptionContext context)
@@ -15,10 +17,11 @@ namespace DDDBasic.Web.Filters
             if (context.Exception is ValidationException)
             {
                 var validationException = (ValidationException)context.Exception;
-                IDictionary<string, string[]> failures = validationException.Failures;
+                var json = validationException.Failures.ConvertDictionaryToArray();
+
                 context.HttpContext.Response.ContentType = "application/json";
                 context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                context.Result = new JsonResult(failures["ExcecaoCapex"]);
+                context.Result = new JsonResult(json);
                 return;
             }
 

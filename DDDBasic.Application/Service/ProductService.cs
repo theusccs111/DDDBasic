@@ -1,8 +1,12 @@
 ﻿using DDDBasic.Application.Interfaces;
 using DDDBasic.Application.Resource.Request;
+using DDDBasic.Application.Validations;
 using DDDBasic.Domain.Entities;
+using DDDBasic.Domain.Exceptions;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,10 +15,12 @@ namespace DDDBasic.Application.Service
     public class ProductService : IDisposable
     {
         private readonly IUnityOfWork _uow;
-        public ProductService(IUnityOfWork uow)
+        private readonly IValidator<Product> _validator;
+        public ProductService(IUnityOfWork uow, IValidator<Product> validator)
         {
             _uow = uow;
-        }
+            _validator = validator;
+    }
 
         public async Task<IEnumerable<Product>> Get()
         {
@@ -33,6 +39,10 @@ namespace DDDBasic.Application.Service
 
         public async Task Add(Product product)
         {
+            var validReturn = await _validator.ValidateAsync(product);
+            if (!validReturn.IsValid)
+                throw new Domain.Exceptions.ValidationException(validReturn.Errors.ToList());
+
             _uow.Products.Create(product);
             await _uow.CompleteAsync();
         }

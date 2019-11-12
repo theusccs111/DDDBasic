@@ -11,6 +11,6 @@ namespace DDDBasic.Domain.Entities
         public string Name { get; set; }
         public decimal Value { get; set; }
         public TypeProduct TypeProduct { get; set; }
-        public int SectionId { get; set; }
+        public int? SectionId { get; set; }
     }
 }
