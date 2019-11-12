@@ -22,10 +22,7 @@ namespace DDDBasic.Application.Service
             _validator = validator;
     }
 
-        public async Task<IEnumerable<Product>> Get()
-        {
-            return await _uow.Products.Get();
-        }
+        
 
         public async Task<Product> GetById(int Id)
         {
