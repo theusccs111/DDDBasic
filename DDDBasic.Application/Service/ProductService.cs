@@ -20,13 +20,11 @@ namespace DDDBasic.Application.Service
         {
             _uow = uow;
             _validator = validator;
-    }
-
+        }
         
-
-        public async Task<Product> GetById(int Id)
+        public Product GetById(int Id)
         {
-            return await _uow.Products.GetById(Id);
+            return _uow.Products.GetFirst(p => p.Id == Id);
         }
 
         public async Task<IEnumerable<Product>> GetByAnyFilter(ProductGetRequest request)
@@ -57,7 +55,7 @@ namespace DDDBasic.Application.Service
             _uow.Products.Delete(product);
             await _uow.CompleteAsync();
         }
-        
+
         public async Task DeleteMany(Product[] products)
         {
             foreach (var item in products)
@@ -89,6 +87,6 @@ namespace DDDBasic.Application.Service
             _uow.Dispose();
         }
 
-        
+
     }
 }

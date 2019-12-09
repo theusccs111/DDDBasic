@@ -1,4 +1,5 @@
 ﻿using DDDBasic.Application.Interfaces.Repository;
+using DDDBasic.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,9 +9,9 @@ namespace DDDBasic.Application.Interfaces
 {
     public interface IUnityOfWork : IDisposable
     {
-        IProductRepository Products {get;}
-        ISectionRepository Sections { get;}
-        ICategoryRepository Categories { get;}
+        IRepository<Product> Products {get;}
+        IRepository<Section> Sections { get;}
+        IRepository<Category> Categories { get;}
         Task CompleteAsync();
     }
 }
