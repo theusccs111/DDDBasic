@@ -1,45 +1,29 @@
 ﻿using DDDBasic.Application.Interfaces;
-using DDDBasic.Application.Resource.Request;
-using DDDBasic.Application.Validations;
 using DDDBasic.Domain.Entities;
-using DDDBasic.Domain.Exceptions;
 using FluentValidation;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DDDBasic.Application.Service
 {
-    public class ProductService : IDisposable
+    public class ProductService : Service<Product>
     {
-        private readonly IUnityOfWork _uow;
         private readonly IValidator<Product> _validator;
-        public ProductService(IUnityOfWork uow, IValidator<Product> validator)
+
+        public ProductService(IUnityOfWork uow, IValidator<Product> validator) : base(uow)
         {
-            _uow = uow;
             _validator = validator;
         }
         
-        public Product GetById(int Id)
-        {
-            return _uow.Products.GetFirst(p => p.Id == Id);
-        }
-
-        public async Task<IEnumerable<Product>> GetByAnyFilter(ProductGetRequest request)
-        {
-            return await _uow.Products.GetProductsByAnyFilter(request);
-        }
-
         public async Task Add(Product product)
         {
             var validReturn = await _validator.ValidateAsync(product);
             if (!validReturn.IsValid)
                 throw new Domain.Exceptions.ValidationException(validReturn.Errors.ToList());
 
-            _uow.Products.Create(product);
-            await _uow.CompleteAsync();
+            Uow.Products.Create(product);
+            await Uow.CompleteAsync();
         }
 
         public async Task AddMany(Product[] products)
@@ -52,8 +36,8 @@ namespace DDDBasic.Application.Service
 
         public async Task Delete(Product product)
         {
-            _uow.Products.Delete(product);
-            await _uow.CompleteAsync();
+            Uow.Products.Delete(product);
+            await Uow.CompleteAsync();
         }
 
         public async Task DeleteMany(Product[] products)
@@ -66,8 +50,8 @@ namespace DDDBasic.Application.Service
 
         public async Task Update(Product product)
         {
-            _uow.Products.Update(product);
-            await _uow.CompleteAsync();
+            Uow.Products.Update(product);
+            await Uow.CompleteAsync();
         }
         public async Task UpdateMany(Product[] products)
         {
@@ -77,16 +61,15 @@ namespace DDDBasic.Application.Service
             }
         }
 
-        public async Task<IEnumerable<Product>> GetProductsByName(string name)
+        public IEnumerable<Product> Get()
         {
-            return await _uow.Products.GetByName(name);
+            return Uow.Products.GetAll().ToArray();
         }
 
-        public void Dispose()
+        public IEnumerable<Product> GetProductsByName(string name)
         {
-            _uow.Dispose();
+            return Uow.Products.Get(p => p.Name.Trim().ToUpper().Equals(name.Trim().ToUpper())).ToArray();
         }
-
 
     }
 }

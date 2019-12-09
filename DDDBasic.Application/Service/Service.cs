@@ -9,6 +9,7 @@ namespace DDDBasic.Application.Service
     public abstract class Service<T> where T : EntityBase
     {
         private readonly IUnityOfWork _uow;
+        protected IUnityOfWork Uow { get { return _uow; } }
         public Service(IUnityOfWork uow)
         {
             _uow = uow;

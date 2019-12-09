@@ -65,14 +65,8 @@ namespace DDDBasic.Web
 
         private static void InjectRepositories(IServiceCollection services)
         {
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ISectionRepository, SectionRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-
-
             services.AddScoped<IUnityOfWork, UnityOfWork>();
         }
-
 
         //private static void InjectFluentValidation(IServiceCollection services)
         //{

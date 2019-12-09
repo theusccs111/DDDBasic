@@ -18,23 +18,16 @@ namespace DDDBasic.Web.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            var resultado = await _productService.Get();
+            var resultado = _productService.Get();
             return Ok(resultado);
         }
-
-        [HttpPost("GetByAnyFilter")]
-        public async Task<IActionResult> GetByAnyFilter(ProductGetRequest request)
-        {
-            var resultado = await _productService.GetByAnyFilter(request);
-            return Ok(resultado);
-        }
-
+        
         [HttpGet("GetById/{Id}")]
-        public async Task<IActionResult> GetById(int Id)
+        public IActionResult GetById(int Id)
         {
-            var resultado = await _productService.GetById(Id);
+            var resultado = _productService.GetById(Id);
             return Ok(resultado);
         }
 
