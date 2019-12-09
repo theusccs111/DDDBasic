@@ -1,10 +1,22 @@
-﻿using System;
+﻿using DDDBasic.Application.Interfaces;
+using DDDBasic.Domain.Entities.Base;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DDDBasic.Application.Service
 {
-    public class Service 
+    public abstract class Service<T> where T : EntityBase
     {
+        private readonly IUnityOfWork _uow;
+        public Service(IUnityOfWork uow)
+        {
+            _uow = uow;
+        }
+
+        public virtual T GetById(int Id)
+        {
+            return _uow.Repository<T>().GetFirst(e => e.Id == Id);
+        }
     }
 }

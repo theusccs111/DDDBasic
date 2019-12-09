@@ -1,8 +1,7 @@
 ﻿using DDDBasic.Application.Interfaces.Repository;
 using DDDBasic.Domain.Entities;
+using DDDBasic.Domain.Entities.Base;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DDDBasic.Application.Interfaces
@@ -13,5 +12,6 @@ namespace DDDBasic.Application.Interfaces
         IRepository<Section> Sections { get;}
         IRepository<Category> Categories { get;}
         Task CompleteAsync();
+        IRepository<T> Repository<T>() where T : EntityBase;
     }
 }

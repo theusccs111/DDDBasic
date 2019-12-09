@@ -14,7 +14,7 @@ namespace DDDBasic.Persistence
     public class UnityOfWork : IUnityOfWork, IDisposable
     {
         private readonly DDDBasicContext _context;
-        //private Dictionary<string, object> repositories;
+        private Dictionary<string, object> repositories;
 
         public IRepository<Product> Products { get { return new Repository<Product>(_context); } }
         public IRepository<Section> Sections { get { return new Repository<Section>(_context); } }
@@ -33,23 +33,22 @@ namespace DDDBasic.Persistence
             _context.Dispose();
         }
 
-        //não apagar talvez use
-        //public IRepository<TEntity> Repository<TEntity>() where TEntity : EntityBase
-        //{
-        //    if (repositories == null)
-        //    {
-        //        repositories = new Dictionary<string, object>();
-        //    }
+        public IRepository<T> Repository<T>() where T : EntityBase
+        {
+            if (repositories == null)
+            {
+                repositories = new Dictionary<string, object>();
+            }
 
-        //    var type = typeof(TEntity).Name;
-        //    if (!repositories.ContainsKey(type))
-        //    {
-        //        var repositorioType = typeof(Repository<>);
-        //        var repositorioInstancia = Activator.CreateInstance(repositorioType.MakeGenericType(typeof(TEntity)), _context);
-        //        repositories.Add(type, repositorioInstancia);
-        //    }
+            var type = typeof(T).Name;
+            if (!repositories.ContainsKey(type))
+            {
+                var repositorioType = typeof(Repository<>);
+                var repositorioInstancia = Activator.CreateInstance(repositorioType.MakeGenericType(typeof(T)), _context);
+                repositories.Add(type, repositorioInstancia);
+            }
 
-        //    return (Repository<TEntity>)repositories[type];
-        //}
+            return (Repository<T>)repositories[type];
+        }
     }
 }
